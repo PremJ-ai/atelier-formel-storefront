@@ -1,0 +1,35 @@
+name: Validate Atelier Formel Next.js source
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "next-app/**"
+      - ".github/workflows/nextjs-check.yml"
+  pull_request:
+    paths:
+      - "next-app/**"
+      - ".github/workflows/nextjs-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: next-app/package.json
+      - name: Install dependencies
+        working-directory: next-app
+        run: npm install
+      - name: Build Next.js app
+        working-directory: next-app
+        run: npm run build
